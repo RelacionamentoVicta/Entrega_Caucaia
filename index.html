@@ -509,6 +509,7 @@
             const btnText = document.getElementById('btnText');
             const confirmationMessage = document.getElementById('confirmationMessage');
             const errorMessage = document.getElementById('errorMessage');
+            const formElement = this;
             
             submitBtn.disabled = true;
             loading.style.display = 'inline-block';
@@ -517,22 +518,19 @@
             confirmationMessage.style.display = 'none';
             errorMessage.style.display = 'none';
             
+            const formData = new FormData(formElement);
+            const dados = Object.fromEntries(formData);
+            
             try {
-                const formData = new FormData(this);
-                const dados = Object.fromEntries(formData);
-                dados.dataEnvio = new Date().toISOString();
-                
                 const submitData = new FormData();
                 Object.keys(dados).forEach(key => {
                     submitData.append(key, dados[key]);
                 });
                 
                 console.log('Enviando dados para:', SCRIPT_URL);
-                console.log('Dados:', dados);
                 
-                const response = await fetch(SCRIPT_URL, {
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
                     body: submitData
                 });
                 
@@ -563,64 +561,22 @@
                 
                 document.getElementById('dadosConfirmacao').innerHTML = resumo;
                 
-                this.style.display = 'none';
+                formElement.style.display = 'none';
                 confirmationMessage.style.display = 'block';
                 
-                confirmationMessage.scrollIntoView({
-                    behavior: 'smooth'
-                });
+                setTimeout(() => {
+                    confirmationMessage.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 100);
                 
             } catch (error) {
                 console.error('Erro ao enviar:', error);
-                
-                try {
-                    console.log('Tentando método alternativo...');
-                    
-                    const params = new URLSearchParams();
-                    Object.keys(dados).forEach(key => {
-                        params.append(key, dados[key]);
-                    });
-                    
-                    await fetch(SCRIPT_URL + '?' + params.toString(), {
-                        method: 'GET',
-                        mode: 'no-cors'
-                    });
-                    
-                    const horarioMap = {
-                        '08:00-09:00': '08:00h às 09:00h',
-                        '09:00-10:00': '09:00h às 10:00h',
-                        '10:00-11:00': '10:00h às 11:00h'
-                    };
-
-                    const pessoasMap = {
-                        '1': 'Apenas eu',
-                        '2': 'Eu e mais uma (duas pessoas)',
-                        '3': 'Eu e mais duas (três pessoas)'
-                    };
-                    
-                    const resumo = `
-                        <div style="text-align: left; background: white; padding: 20px; border-radius: 10px; margin-top: 15px;">
-                            <strong>Nome:</strong> ${dados.nomeCompleto}<br>
-                            <strong>CPF:</strong> ${dados.cpf}<br>
-                            <strong>Apartamento:</strong> ${dados.apartamento} - Bloco ${dados.bloco}<br>
-                            <strong>Horário escolhido:</strong> ${horarioMap[dados.horario]}<br>
-                            <strong>Número de pessoas:</strong> ${pessoasMap[dados.acompanhantes]}<br>
-                            <strong>Confirmado em:</strong> ${new Date().toLocaleString('pt-BR')}
-                        </div>
-                    `;
-                    
-                    document.getElementById('dadosConfirmacao').innerHTML = resumo;
-                    this.style.display = 'none';
-                    confirmationMessage.style.display = 'block';
-                    confirmationMessage.scrollIntoView({ behavior: 'smooth' });
-                    
-                } catch (secondError) {
-                    console.error('Erro no método alternativo:', secondError);
-                    document.getElementById('errorText').textContent = 
-                        'Erro de conexão. Verifique sua internet e tente novamente. Se o problema persistir, entre em contato conosco.';
-                    errorMessage.style.display = 'block';
-                    errorMessage.scrollIntoView({ behavior: 'smooth' });
-                }
+                document.getElementById('errorText').textContent = 
+                    'Erro de conexão. Verifique sua internet e tente novamente. Se o problema persistir, entre em contato conosco.';
+                errorMessage.style.display = 'block';
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
             } finally {
                 submitBtn.disabled = false;
                 loading.style.display = 'none';
