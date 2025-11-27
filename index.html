@@ -277,7 +277,7 @@
             display: none;
             background: linear-gradient(135deg, #C5F167, #F0F5CD);
             color: #005D2C;
-            padding: 25px;
+            padding: 40px 30px;
             border-radius: 15px;
             text-align: center;
             margin-top: 20px;
@@ -285,13 +285,6 @@
         }
 
         .confirmation-message h3 {
-            margin-bottom: 10px;
-        }
-
-        .confirmation-message::before {
-            content: '✅';
-            font-size: 2em;
-            display: block;
             margin-bottom: 10px;
         }
 
@@ -567,13 +560,18 @@
                 
                 document.getElementById('dadosConfirmacao').innerHTML = resumo;
                 
+                // Esconde o formulário
+                document.querySelector('.intro-text').style.display = 'none';
                 formElement.style.display = 'none';
+                
+                // Mostra a mensagem de confirmação
                 confirmationMessage.style.display = 'block';
                 
+                // Scroll para a mensagem
                 setTimeout(() => {
-                    confirmationMessage.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
                     });
                 }, 100);
                 
