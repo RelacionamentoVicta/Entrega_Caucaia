@@ -88,6 +88,14 @@
 
         .form-content {
             padding: 40px 30px;
+            min-height: 200px;
+        }
+        
+        .form-content.success-mode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
         }
 
         .intro-text {
@@ -564,10 +572,13 @@
                 document.querySelector('.intro-text').style.display = 'none';
                 formElement.style.display = 'none';
                 
+                // Adiciona classe para centralizar
+                document.querySelector('.form-content').classList.add('success-mode');
+                
                 // Mostra a mensagem de confirmação
                 confirmationMessage.style.display = 'block';
                 
-                // Scroll para a mensagem
+                // Scroll para o topo
                 setTimeout(() => {
                     window.scrollTo({
                         top: 0,
