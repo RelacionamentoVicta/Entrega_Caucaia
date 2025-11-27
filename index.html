@@ -566,17 +566,28 @@
                     </div>
                 `;
                 
+                console.log('Exibindo mensagem de sucesso');
+                console.log('Dados:', dados);
+                
                 document.getElementById('dadosConfirmacao').innerHTML = resumo;
                 
                 // Esconde o formulário
-                document.querySelector('.intro-text').style.display = 'none';
+                const introText = document.querySelector('.intro-text');
+                if (introText) introText.style.display = 'none';
                 formElement.style.display = 'none';
                 
                 // Adiciona classe para centralizar
-                document.querySelector('.form-content').classList.add('success-mode');
+                const formContent = document.querySelector('.form-content');
+                if (formContent) formContent.classList.add('success-mode');
                 
                 // Mostra a mensagem de confirmação
                 confirmationMessage.style.display = 'block';
+                confirmationMessage.style.visibility = 'visible';
+                confirmationMessage.style.opacity = '1';
+                
+                console.log('Mensagem de confirmação exibida');
+                console.log('Display:', confirmationMessage.style.display);
+                console.log('Conteúdo HTML:', confirmationMessage.innerHTML);
                 
                 // Scroll para o topo
                 setTimeout(() => {
