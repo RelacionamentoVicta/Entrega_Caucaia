@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmação de Presença - Entrega de Chaves</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -447,7 +448,12 @@
                 </div>
 
                 <div class="requirements">
-                    <h4>Documentos Obrigatórios para Retirada das Chaves</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                        <h4 style="margin: 0;">Documentos Obrigatórios para Retirada das Chaves</h4>
+                        <button type="button" onclick="baixarPDF()" style="background: linear-gradient(135deg, #357C00, #005D2C); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; font-size: 0.9em;">
+                            📄 Baixar PDF
+                        </button>
+                    </div>
                     <ul>
                         <li><strong>Documento de Identificação:</strong> RG ou CNH original com foto do titular do contrato</li>
                         <li><strong>Procuração (se aplicável):</strong> Apenas procuração pública original ou procuração com assinatura pelo certificado ICP Brasil/E-notariado. Procurações digitais simples do GOV não são aceitas</li>
@@ -633,6 +639,99 @@
         });
 
         console.log('Formulário carregado. URL do script:', SCRIPT_URL);
+
+        // Função para baixar PDF com os documentos
+        function baixarPDF() {
+            // Usando jsPDF via CDN
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Título
+            doc.setFontSize(20);
+            doc.setTextColor(0, 81, 42);
+            doc.text('VITÓRIA CAUCAIA', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(14);
+            doc.text('Entrega de Chaves', 105, 30, { align: 'center' });
+            
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Rua Padre Climério Chaves, 536 – Caucaia', 105, 38, { align: 'center' });
+            doc.text('Data: 20 de dezembro de 2025', 105, 45, { align: 'center' });
+            
+            // Linha separadora
+            doc.setDrawColor(110, 204, 1);
+            doc.setLineWidth(0.5);
+            doc.line(20, 50, 190, 50);
+            
+            // Título da seção
+            doc.setFontSize(14);
+            doc.setTextColor(0, 81, 42);
+            doc.text('Documentos Obrigatórios para Retirada das Chaves', 20, 60);
+            
+            // Lista de documentos
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            
+            let y = 70;
+            
+            // Item 1
+            doc.setFont(undefined, 'bold');
+            doc.text('✓ Documento de Identificação:', 25, y);
+            doc.setFont(undefined, 'normal');
+            const texto1 = doc.splitTextToSize('RG ou CNH original com foto do titular do contrato', 160);
+            doc.text(texto1, 25, y + 6);
+            y += 18;
+            
+            // Item 2
+            doc.setFont(undefined, 'bold');
+            doc.text('✓ Procuração (se aplicável):', 25, y);
+            doc.setFont(undefined, 'normal');
+            const texto2 = doc.splitTextToSize('Apenas procuração pública original ou procuração com assinatura pelo certificado ICP Brasil/E-notariado. Procurações digitais simples do GOV não são aceitas.', 160);
+            doc.text(texto2, 25, y + 6);
+            y += 26;
+            
+            // Item 3
+            doc.setFont(undefined, 'bold');
+            doc.text('✓ Representante:', 25, y);
+            doc.setFont(undefined, 'normal');
+            const texto3 = doc.splitTextToSize('Documento de identificação original com foto do representante (se procuração for utilizada)', 160);
+            doc.text(texto3, 25, y + 6);
+            y += 18;
+            
+            // Item 4
+            doc.setFont(undefined, 'bold');
+            doc.text('✓ Regularidade Contratual:', 25, y);
+            doc.setFont(undefined, 'normal');
+            const texto4 = doc.splitTextToSize('Cumprimento integral de todas as condições contratuais', 160);
+            doc.text(texto4, 25, y + 6);
+            y += 20;
+            
+            // Caixa de aviso importante
+            doc.setFillColor(255, 235, 238);
+            doc.setDrawColor(211, 47, 47);
+            doc.setLineWidth(1);
+            doc.rect(20, y, 170, 35, 'FD');
+            
+            doc.setFontSize(12);
+            doc.setTextColor(211, 47, 47);
+            doc.setFont(undefined, 'bold');
+            doc.text('⚠️ IMPORTANTE:', 25, y + 8);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont(undefined, 'normal');
+            const textoImportante = doc.splitTextToSize('Procurações emitidas digitalmente pelo portal GOV.BR sem certificação ICP Brasil ou E-notariado NÃO SERÃO ACEITAS. Apenas procurações públicas tradicionais ou digitais com certificado ICP Brasil/E-notariado são válidas.', 160);
+            doc.text(textoImportante, 25, y + 15);
+            
+            // Rodapé
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Documento gerado em: ' + new Date().toLocaleString('pt-BR'), 105, 280, { align: 'center' });
+            
+            // Salvar PDF
+            doc.save('Documentos_Obrigatorios_Vitoria_Caucaia.pdf');
+        }
     </script>
 </body>
 </html>
